@@ -3,33 +3,39 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-      "@material-ui/core": "^3.9.3",
-      "@material-ui/icons": "^3.0.2",
-      "body-scroll-lock": "^2.6.1",
-      "react": "^16.8.6",
-      "react-dom": "^16.8.6",
-      "react-grid-layout": "^0.16.6",
-      "react-scripts": "2.1.8"
+        "@craco/craco": "^6.4.5",
+        "@material-ui/core": "^3.9.3",
+        "@material-ui/icons": "^3.0.2",
+        "body-scroll-lock": "^2.6.1",
+        "gulp": "^4.0.2",
+        "gulp-replace": "^1.1.3",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "react-grid-layout": "^0.16.6",
+        "react-scripts": "^4.0.0"
     },
     "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "predeploy": "npm run build",
-      "deploy": "gh-pages -d build"
+        "start": "craco --openssl-legacy-provider start",
+        "build": "craco --openssl-legacy-provider build && cp appsscript.json ./build && cp main.js ./build",
+        "test": "craco --openssl-legacy-provider test",
+        "start1": "react-scripts --openssl-legacy-provider start",
+        "build1": "react-scripts --openssl-legacy-provider build",
+        "test1": "react-scripts --openssl-legacy-provider test",
+        "eject": "react-scripts --openssl-legacy-provider eject",
+        "predeploy": "npm run build && rm -r ./build/static",
+        "deploy": "clasp push"
     },
     "eslintConfig": {
-      "extends": "react-app"
+        "extends": "react-app"
     },
     "browserslist": [
-      ">0.2%",
-      "not dead",
-      "not ie <= 11",
-      "not op_mini all"
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
     ],
     "devDependencies": {
-      "gh-pages": "^2.0.1"
+        "gh-pages": "^2.0.1",
+        "gulp-inline-source": "^4.0.0"
     }
-  }
-  
+}
