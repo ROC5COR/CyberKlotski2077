@@ -2,6 +2,11 @@ function doGet(e) {
   return HtmlService.createHtmlOutputFromFile("index")
 }
 
+function getScriptURL() {
+  var url = ScriptApp.getService().getUrl();
+  return url ;
+}
+
 function addNewRow(rowData) {
   console.log('Have to add new row: ', rowData)
   const ss = SpreadsheetApp.getActiveSpreadsheet()

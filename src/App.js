@@ -167,29 +167,10 @@ function saveToServer(startTime, moves, win) {
     }
 }
 
-function saveAs(uri, filename) {
-
-    var link = document.createElement('a');
-
-    if (typeof link.download === 'string') {
-
-        link.href = uri;
-        link.download = filename;
-
-        //Firefox requires the link to be in the body
-        document.body.appendChild(link);
-
-        //simulate click
-        link.click();
-
-        //remove the link when done
-        document.body.removeChild(link);
-
-    } else {
-
-        window.open(uri);
-
-    }
+function reloadPage(){
+    google.script.run
+    .withSuccessHandler(function(url){window.open(url,"_top");})
+    .getScriptURL();
 }
 
 
@@ -227,7 +208,11 @@ class App extends Component {
       const oldItem = this.state.prevLayout[dragged]
       if (newItem.x !== oldItem.x || newItem.y !== oldItem.y) {
           if (Math.abs(newItem.x - oldItem.x) >1 || Math.abs(newItem.y - oldItem.y) > 1 || (Math.abs(newItem.x - oldItem.x) >=1 && Math.abs(newItem.y - oldItem.y) >= 1)) {
-            global.location.reload()
+            if(google){
+                reloadPage()
+            } else {
+                global.location.reload()
+            }
           } else {
             let win = false
             if (newItem.i === "1" && newItem.x === 1 && newItem.y ===3) {
@@ -317,6 +302,7 @@ class App extends Component {
     <div>
         <Grid container direction="column" justify="flex-start" alignItems="center" className={classes.wrapper} id="mainPanel">
             <h1 style={{margin: "15px 0 0 0", textShadow: "1px 1px 1px white"}}>CyberKlotski 2077</h1>
+            <h3>Try to free the plane!</h3>
             <Grid container justify="flex-start" className={classes.frame}>
                 <GridLayout layout={this.state.layout} cols={4} rowHeight={70} width={280} margin={[2,2]} containerPadding = {[0,0]} isResizable={false} preventCollision={true} compactType={null} onLayoutChange={this.onLayoutChange} onDragStart={this.onDragStart} onDragStop={this.onDragStop} draggableHandle=".moving-grid">
                     {layout.map((block, i) => {
