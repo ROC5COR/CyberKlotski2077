@@ -11,6 +11,7 @@ import GridLayout from "react-grid-layout";
 // import sky from './static/sky.jpg'
 // import HelpText from './components/HelpText'
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+import html2canvas from 'html2canvas';
 
 const google = window.google;
 // const SCORES_COLUMNS = [
@@ -20,7 +21,7 @@ const google = window.google;
 // ]
 const layout = [
   {i: "0", x: 0, y: 0, w: 1, h: 2, img: "https://cdn-icons-png.flaticon.com/512/1766/1766429.png"},
-  {i: "1", x: 1, y: 0, w: 2, h: 2, img: "https://cdn-icons.flaticon.com/png/512/6221/premium/6221857.png?token=exp=1659625743~hmac=3f1970f7bcf82e2ed577dfb6ce3731fc"},
+  {i: "1", x: 1, y: 0, w: 2, h: 2, img: "https://cdn-icons-png.flaticon.com/512/723/723955.png"},
   {i: "2", x: 3, y: 0, w: 1, h: 2, img: "https://cdn-icons-png.flaticon.com/512/1766/1766429.png"},
   {i: "3", x: 0, y: 2, w: 1, h: 2, img: "https://cdn-icons-png.flaticon.com/512/978/978022.png"},
   {i: "4", x: 1, y: 2, w: 2, h: 1, img: "https://cdn-icons-png.flaticon.com/512/484/484664.png"},
@@ -50,16 +51,6 @@ const styles = {
     borderRadius: '5px',
     backgroundColor: "rgba(249, 249, 97, 0.5)",
     overflow: "hidden",
-  },
-
-  help: {
-    "&:hover" : {
-      cursor: 'pointer',
-      filter: "brightness(120%)"
-    },
-    color: "black",
-    margin: "5px 0 0 0",
-    fontSize: "2em",
   },
 
   grid : {
@@ -176,6 +167,32 @@ function saveToServer(startTime, moves, win) {
     }
 }
 
+function saveAs(uri, filename) {
+
+    var link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+
+        link.href = uri;
+        link.download = filename;
+
+        //Firefox requires the link to be in the body
+        document.body.appendChild(link);
+
+        //simulate click
+        link.click();
+
+        //remove the link when done
+        document.body.removeChild(link);
+
+    } else {
+
+        window.open(uri);
+
+    }
+}
+
+
 class App extends Component {
   targetElement = null;
 
@@ -251,6 +268,22 @@ class App extends Component {
     this.loadScores()
   }
 
+  takeScreenshot = e => {
+    html2canvas(document.body, { 
+        letterRendering: 1,
+        allowTaint: false,
+        useCORS: true 
+    }).then(function(canvas) {
+        // document.body.appendChild(canvas);
+
+        let a = document.createElement('a')
+        a.crossOrigin="anonymous"
+        a.href = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+        a.download = 'your-play.jpg';
+        a.click();
+    });
+  }
+
   loadScoresSuccessHandler = (scores) => {
     if(!scores){
         scores = []
@@ -301,13 +334,17 @@ class App extends Component {
                 <Details style={{marginTop: "5px"}}/>
                 <h3 className={this.state.win ? classes.freedom : classes.nonfreedom}><i>EXIT</i></h3>
                 <Button variant="contained" className={classes.button} onClick={this.reset}>
-                    Reset
+                    Reset game
                 </Button>
-                <Button variant="contained" className={classes.button} onClick={this.save}>Save</Button>
-                <Button variant="contained" className={classes.button} onClick={this.loadScores}>Load scores</Button>
+            </Grid>
+            <Grid container justify='center' direction='row' alignItems='center'>
+                <Button variant="contained" margin="10px" className={classes.button} onClick={this.save}>Save progress on server</Button> 
+                <Button variant='contained' margin="10px" className={classes.button} onClick={this.takeScreenshot}>Take Screenshot</Button> 
+                <Button variant="contained" margin="10px" className={classes.button} onClick={this.loadScores}>Load scores</Button> 
             </Grid>
             
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <h2>Scores</h2>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table" className='scoresClass'>
                 <TableHead>
                     <TableRow>
                         <TableCell>Timestamp</TableCell>
@@ -329,6 +366,16 @@ class App extends Component {
                 ))}
                 </TableBody>
             </Table>
+            
+            <div className='redBackground'>
+                <h2>Credits</h2>
+                <br/><a href="https://github.com/ziqingW/Japan-klotski">https://github.com/ziqingW/Japan-klotski</a>
+                <br/><a href="https://www.flaticon.com/free-icons/ai" title="ai icons">Ai icons created by Icongeek26 - Flaticon</a>
+                <br/><a href="https://www.flaticon.com/free-icons/circuit" title="circuit icons">Circuit icons created by Good Ware - Flaticon</a>
+                <br/><a href="https://www.flaticon.com/free-icons/gear" title="gear icons">Gear icons created by Freepik - Flaticon</a>
+                <br/><a href="https://www.flaticon.com/free-icons/battery" title="battery icons">Battery icons created by prettycons - Flaticon</a>
+                <br/><a href="https://www.flaticon.com/free-icons/plane" title="plane icons">Plane icons created by Freepik - Flaticon</a>
+            </div>
             
             <Modal open={this.state.win}>
                 <Grid container direction="column" justify="center" alignItems="center" className={classes.modalScreen}>

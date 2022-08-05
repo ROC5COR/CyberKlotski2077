@@ -1,8 +1,22 @@
 .block-img {
-    user-drag: none;
     -webkit-user-drag: none;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.redBackground {
+    background-color: red;
+    color: whitesmoke;
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 50px;
+}
+
+.scoresClass {
+    /* background-color: #f1e200;*/
+    background-color: #45FFFF;
+    border-radius: 20px;
 }
